@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Malaysian NCD Triple-Target Master</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<style>
+:root{--bg:#f5f6fb;--card:#fff;--fg:#1c2033;--mut:#6b7289;--line:#e3e6f0;--pri:#4f46e5;--tint:#eef0ff;--ok:#047857;--okb:#d9f5ea;--wa:#b45309;--wab:#fdf0d5;--bad:#be123c;--badb:#fde4ea;--inf:#0369a1;--infb:#def1fb;--vh:#9f1239;--hi:#b45309;--mo:#0f766e;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1117;--card:#171a24;--fg:#e8eaf3;--mut:#9aa1b8;--line:#272b3a;--pri:#8b83ff;--tint:#23224a;--ok:#34d399;--okb:#10362a;--wa:#fbbf24;--wab:#3b2f0d;--bad:#fb7185;--badb:#3d1620;--inf:#7dd3fc;--infb:#10303f;--vh:#fb7185;--hi:#fbbf24;--mo:#2dd4bf;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1117;--card:#171a24;--fg:#e8eaf3;--mut:#9aa1b8;--line:#272b3a;--pri:#8b83ff;--tint:#23224a;--ok:#34d399;--okb:#10362a;--wa:#fbbf24;--wab:#3b2f0d;--bad:#fb7185;--badb:#3d1620;--inf:#7dd3fc;--infb:#10303f;--vh:#fb7185;--hi:#fbbf24;--mo:#2dd4bf;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font:14px/1.5 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+.wrap{max-width:1100px;margin:0 auto;padding:14px 14px 130px}
+header{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+h1{font-size:18px;margin:0;letter-spacing:-.01em}.sub{color:var(--mut);font-size:12px;margin:0}
+.btn{border:1px solid var(--line);background:var(--card);padding:8px 12px;border-radius:10px;cursor:pointer;font-weight:600;font-size:13px}
+.btn.p{background:var(--pri);border-color:var(--pri);color:#fff}.btn.s{padding:5px 9px;font-size:12px}
+:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+nav{display:flex;gap:4px;position:fixed;left:0;right:0;bottom:0;z-index:50;background:var(--card);border-top:1px solid var(--line);padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px))}
+nav button{flex:1;border:0;background:none;padding:6px 2px;border-radius:10px;font-size:10px;font-weight:600;color:var(--mut);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;min-width:0}
+nav button b{font-size:19px;line-height:1.1}nav button.on{background:var(--tint);color:var(--pri)}
+.tab{display:none}.tab.on{display:block}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+.card h2{font-size:14px;margin:0 0 10px}.card h3{font-size:13px;margin:12px 0 6px}
+.grid{display:grid;gap:12px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}
+@media(max-width:820px){.g2,.g3{grid-template-columns:1fr}}
+.fg{display:grid;grid-template-columns:repeat(auto-fill,minmax(125px,1fr));gap:8px}
+.fg label,.ck label{font-size:11px;font-weight:600;color:var(--mut);display:block}
+.fg input,.fg select,textarea,.in{width:100%;margin-top:3px;padding:8px 9px;border:1px solid var(--line);border-radius:9px;background:var(--bg);font-size:16px}
+.ck{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:6px;margin-top:8px}
+.ck label{display:flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--line);padding:8px;border-radius:9px;cursor:pointer;color:var(--fg);font-weight:500;font-size:12.5px}
+.ck input{width:18px;height:18px;flex-shrink:0}
+.tier{border-radius:14px;padding:14px;color:#fff}
+.tier h2{margin:0;font-size:19px;color:#fff}.tier p{margin:4px 0 0;font-size:12.5px;opacity:.95}
+.tile{border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--card)}
+.tile small{color:var(--mut);font-weight:700;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em}
+.tile .v{font-size:17px;font-weight:700;margin:3px 0}
+.chip{display:inline-block;border-radius:99px;padding:2px 9px;font-size:11px;font-weight:700}
+.c-ok{background:var(--okb);color:var(--ok)}.c-bad{background:var(--badb);color:var(--bad)}.c-wa{background:var(--wab);color:var(--wa)}.c-inf{background:var(--infb);color:var(--inf)}
+.al{border-left:4px solid;border-radius:8px;padding:9px 11px;margin:6px 0;font-size:13px}
+.al.d{background:var(--badb);border-color:var(--bad)}.al.w{background:var(--wab);border-color:var(--wa)}.al.i{background:var(--infb);border-color:var(--inf)}
+.al b{display:block}
+.act{border:1px solid var(--line);border-radius:10px;padding:9px 11px;margin:6px 0;background:var(--bg)}
+.act .t{font-weight:700;font-size:13px}.act .r{color:var(--mut);font-size:11px;margin-top:3px}
+.act.e{border-left:4px solid var(--pri)}
+details{border:1px solid var(--line);border-radius:10px;padding:8px 11px;margin:6px 0;background:var(--bg)}
+summary{cursor:pointer;font-weight:700;font-size:13px}details p,details li{font-size:12.5px;color:var(--fg);margin:5px 0}
+.tw{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:640px;font-size:12.5px}
+th{text-align:left;color:var(--mut);font-size:11px;padding:7px 8px;border-bottom:1px solid var(--line)}td{padding:8px;border-bottom:1px solid var(--line);vertical-align:top}
+.flow{display:flex;flex-direction:column;align-items:center;gap:0}
+.node{width:100%;max-width:760px;border:2px solid var(--pri);background:var(--card);border-radius:12px;padding:10px 12px;text-align:left}
+.node.dec{border-style:dashed;background:var(--tint)}.node.end{border-color:var(--ok)}.node.red{border-color:var(--bad)}
+.node h4{margin:0 0 3px;font-size:13.5px}.node p{margin:2px 0;font-size:12.5px}
+.arr{font-size:20px;color:var(--pri);line-height:1.1;margin:2px 0}
+.br{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:760px}
+@media(max-width:620px){.br{grid-template-columns:1fr}}
+.ecg{border:1px solid var(--line);border-radius:12px;padding:10px;background:var(--card)}
+.ecg svg{width:100%;height:64px;background:var(--bg);border-radius:8px}
+.ecg h4{margin:6px 0 2px;font-size:13.5px}.ecg ul{margin:3px 0 3px 16px;padding:0;font-size:12.5px}
+.act-line{font-size:12.5px;background:var(--tint);border-radius:8px;padding:6px 8px;margin-top:5px}
+#ai-out,.aibox{white-space:pre-wrap;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px;font-size:13px;min-height:44px}
+.muted{color:var(--mut);font-size:12px}
+@media(min-width:900px){nav{position:static;border:0;background:none;padding:0;margin-bottom:12px;flex-wrap:wrap}nav button{flex-direction:row;font-size:13px;gap:6px;padding:8px 12px;flex:0 0 auto;border:1px solid var(--line);background:var(--card)}nav button.on{border-color:var(--pri)}.wrap{padding-bottom:40px}}
+@media print{nav,.no-print,header .btn{display:none!important}body{background:#fff}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div><h1>🩺 Malaysian NCD Triple-Target Master</h1><p class="sub">T2DM + Hypertension + Dyslipidaemia · primary care decision support (unofficial)</p></div>
+  <div class="no-print"><button class="btn" id="theme">◐ Theme</button> <button class="btn p" id="pdf">Save PDF</button></div>
+</header>
+<div class="card" style="border-color:var(--wa)"><div class="muted" style="color:var(--fg)">⚠ Decision-support aid for clinicians, built from the Malaysian CPGs. It does not replace judgement or local protocols. <b>Hypertension:</b> I could only verify the MOH HTN CPG <b>5th Edition (2018)</b>; a 2026 edition could not be confirmed, so BP rules marked “verify” should be checked against the edition you use. Nothing you enter is stored.</div></div>
+
+<nav id="nav"></nav>
+
+<!-- ENGINE -->
+<section class="tab on" id="t-engine">
+ <div class="grid g2" style="align-items:start">
+  <div>
+   <div class="card"><h2>1 · Patient (single form)</h2>
+    <div class="fg" id="f-num"></div>
+    <div class="ck" id="f-ck"></div>
+    <h3>Current medications (for sick-day alert and escalation)</h3>
+    <div class="ck" id="f-med"></div>
+    <div style="margin-top:10px" class="no-print"><label class="muted">Patient name / ID (for PDF only)</label><input class="in" id="pid" maxlength="60" placeholder="Optional"></div>
+   </div>
+   <div class="card"><h2>Sick-day medication alert</h2>
+    <select class="in" id="sd-sc"><option value="1">Fever / infection, still eating and drinking well</option><option value="2" selected>Vomiting / diarrhoea / poor intake / dehydration</option><option value="3">Planned surgery, fasting or contrast study</option></select>
+    <div id="sd-out" style="margin-top:8px"></div>
+   </div>
+  </div>
+  <div id="res"></div>
+ </div>
+ <div class="card"><h2>🤖 Claude clinical consult (uses the numbers above)</h2>
+  <p class="muted">Sends the patient data and CPG rules to Claude on your own account (you will be asked to allow it once). Review every suggestion.</p>
+  <div class="no-print" style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn p" id="ai-consult">Generate consult note + referral letter</button><button class="btn" id="ai-ddi">Check medications for interactions</button></div>
+  <div style="display:flex;gap:8px;margin:10px 0" class="no-print"><input class="in" id="ai-q" placeholder="Ask a question, e.g. can I start SGLT2i at eGFR 28?" style="margin:0"><button class="btn" id="ai-ask">Ask</button></div>
+  <div id="ai-out" class="aibox">Nothing generated yet.</div>
+ </div>
+</section>
+
+<!-- FLOW -->
+<section class="tab" id="t-flow"><div class="card"><h2>Management flowchart (tap “Clinical reasoning” on any step)</h2><div class="flow" id="flow"></div></div></section>
+
+<!-- CASES -->
+<section class="tab" id="t-cases"><div class="card"><h2>Common GP presentations. Tap one to load it into the engine.</h2><div class="grid g2" id="cases"></div></div></section>
+
+<!-- LABS -->
+<section class="tab" id="t-labs"><div class="card"><h2>Investigations: normal range, action threshold, red flag and referral</h2>
+ <input class="in" id="lab-q" placeholder="Search a test, e.g. potassium, UACR, ALT" aria-label="Search"><div class="tw" style="margin-top:8px"><table><thead><tr><th>Test</th><th>Normal / target</th><th>Act when</th><th>Red flag / refer</th></tr></thead><tbody id="labs"></tbody></table></div></div></section>
+
+<!-- ECG -->
+<section class="tab" id="t-ecg"><div class="card"><h2>ECG quick reference for NCD patients</h2>
+ <details open><summary>5-step read (about 60 seconds)</summary><ol style="font-size:12.5px;padding-left:18px"><li><b>Rate and rhythm:</b> regular? P before every QRS? (AF = irregularly irregular, no P)</li><li><b>Axis and intervals:</b> PR 120–200 ms, QRS &lt;120 ms, QTc &lt;450 (M) / &lt;460 (F) ms</li><li><b>ST and T:</b> elevation, depression, inversion, peaked T</li><li><b>Q waves and R progression:</b> pathological Q = ≥40 ms wide or &gt;25% of the R wave</li><li><b>Voltage and chamber:</b> LVH (Sokolow-Lyon: S in V1 + R in V5/V6 ≥35 mm) with strain</li></ol>
+ <p class="muted"><b>Do an ECG:</b> at diagnosis of T2DM or HTN (CPG baseline), chest pain or breathlessness, palpitations, syncope, K⁺ &lt;3.0 or ≥5.5, before QT-prolonging drugs, and when starting new rate-slowing drugs. Diabetics may have <b>silent ischaemia</b>: no chest pain does not exclude MI.</p></details>
+ <div class="grid g3" id="ecgs" style="margin-top:10px"></div></div></section>
+
+<!-- REFS -->
+<section class="tab" id="t-refs"><div class="card"><h2>References and verified CPG numbers</h2><div id="refs"></div></div></section>
+</div>
+
+<script>
+(function(){
+var $=function(i){return document.getElementById(i)};
+/* ---------- theme ---------- */
+var KEY="ncd-triple-theme";
+try{var th=localStorage.getItem(KEY);if(th)document.documentElement.setAttribute("data-theme",th)}catch(e){}
+$("theme").onclick=function(){var d=document.documentElement,dark=d.getAttribute("data-theme")?d.getAttribute("data-theme")==="dark":matchMedia("(prefers-color-scheme: dark)").matches;var n=dark?"light":"dark";d.setAttribute("data-theme",n);try{localStorage.setItem(KEY,n)}catch(e){}};
+
+/* ---------- nav ---------- */
+var TABS=[["engine","🎯","Engine"],["flow","🔀","Flowchart"],["cases","🧑‍⚕️","GP cases"],["labs","🧪","Labs"],["ecg","💓","ECG"],["refs","📚","Refs"]];
+$("nav").innerHTML=TABS.map(function(t,i){return '<button data-t="'+t[0]+'" class="'+(i?"":"on")+'"><b>'+t[1]+'</b>'+t[2]+'</button>'}).join("");
+$("nav").onclick=function(e){var b=e.target.closest("button");if(!b)return;show(b.dataset.t)};
+function show(t){document.querySelectorAll(".tab").forEach(function(s){s.classList.toggle("on",s.id==="t-"+t)});document.querySelectorAll("#nav button").forEach(function(b){b.classList.toggle("on",b.dataset.t===t)});window.scrollTo({top:0})}
+
+/* ---------- form ---------- */
+var NUM=[["age","Age (y)",58],["sbp","SBP mmHg",152],["dbp","DBP mmHg",88],["hr","Pulse /min",78],["dur","DM duration (y)",8],["hba1c","HbA1c %",8.4,.1],["tc","TC mmol/L",5.6,.1],["ldl","LDL-C mmol/L",3.4,.1],["hdl","HDL-C mmol/L",1.0,.1],["tg","TG mmol/L",2.1,.1],["egfr","eGFR mL/min",52],["k","K⁺ mmol/L",4.6,.1]];
+$("f-num").innerHTML=NUM.map(function(n){return '<div><label for="'+n[0]+'">'+n[1]+'</label><input id="'+n[0]+'" type="number" inputmode="decimal" step="'+(n[3]||1)+'" value="'+n[2]+'"></div>'}).join("")+
+'<div><label for="sex">Sex</label><select id="sex"><option value="m">Male</option><option value="f">Female</option></select></div><div><label for="uacr">UACR (mg/mmol)</label><select id="uacr"><option value="a1">A1: &lt;3</option><option value="a2" selected>A2: 3–30</option><option value="a3">A3: &gt;30</option></select></div>';
+var CK=[["dm","Type 2 diabetes",1],["htn","Hypertension (known / on treatment)",1],["smk","Current smoker"],["frail","Frail / limited life expectancy"],["ascvd","Established ASCVD (MI, stroke, PAD, PCI/CABG)"],["rec","Recurrent or polyvascular ASCVD"],["hf","Heart failure"],["tod","Retinopathy / neuropathy"],["hypo","Prone to hypoglycaemia"],["fert","Woman who could become pregnant"]];
+$("f-ck").innerHTML=CK.map(function(c){return '<label><input type="checkbox" id="'+c[0]+'"'+(c[2]?" checked":"")+'>'+c[1]+'</label>'}).join("");
+var MED=[["met","Metformin"],["sglt","SGLT2 inhibitor"],["raas","ACEi / ARB"],["diur","Diuretic"],["mra","Spironolactone / MRA"],["su","Sulphonylurea"],["ins","Insulin"],["nsaid","NSAID"],["statin","Statin"],["ezet","Ezetimibe"]];
+$("f-med").innerHTML=MED.map(function(c){return '<label><input type="checkbox" id="m-'+c[0]+'">'+c[1]+'</label>'}).join("");
+document.addEventListener("input",function(e){if(e.target.closest("#t-engine")&&e.target.id!=="ai-q"&&e.target.id!=="pid")run()});
+document.addEventListener("change",function(e){if(e.target.closest("#t-engine")&&e.target.id!=="pid")run()});
+
+function P(){var g=function(i){return parseFloat($(i).value)},c=function(i){return $(i).checked};
+ var m={};MED.forEach(function(x){m[x[0]]=c("m-"+x[0])});
+ return{age:g("age")||0,sex:$("sex").value,sbp:g("sbp")||0,dbp:g("dbp")||0,hr:g("hr")||0,dur:g("dur")||0,a1c:g("hba1c")||0,tc:g("tc")||0,ldl:g("ldl")||0,hdl:g("hdl")||0,tg:g("tg")||0,egfr:g("egfr")||0,k:g("k")||0,uacr:$("uacr").value,dm:c("dm"),htn:c("htn"),smk:c("smk"),frail:c("frail"),ascvd:c("ascvd"),rec:c("rec"),hf:c("hf"),tod:c("tod"),hypo:c("hypo"),fert:c("fert"),m:m}}
+
+/* ---------- engine ---------- */
+var R=null;
+function calc(p){
+ var r={p:p,why:[],al:[],ac:[],ref:[],mon:[]},A=function(cat,lvl,t,d,ref){r.ac.push({cat:cat,lvl:lvl,t:t,d:d,ref:ref||""})},AL=function(ty,t,d){r.al.push({ty:ty,t:t,d:d})};
+ var dyslip=p.ldl>2.6||p.tg>1.7||p.hdl<(p.sex==="m"?1.0:1.2)||p.m.statin,albu=p.uacr!=="a1";
+ var vh=[],tier;
+ if(p.ascvd)vh.push("established ASCVD");
+ if(p.egfr&&p.egfr<30)vh.push("eGFR <30 (CKD stage 4+)");
+ if(p.dm){if(albu)vh.push("diabetes with albuminuria");if(p.tod)vh.push("diabetes with retinopathy/neuropathy");if(p.egfr<60&&p.egfr>=30)vh.push("diabetes with eGFR <60");if(p.smk)vh.push("diabetes + smoking");if(p.htn)vh.push("diabetes + hypertension");if(dyslip)vh.push("diabetes + dyslipidaemia")}
+ if(vh.length){tier=p.rec?"Very High (recurrent/polyvascular)":"Very High";r.col="#9f1239";r.ldlT=1.4;r.ldlTxt="<1.4 mmol/L and ≥50% reduction"+(p.rec?" (a lower goal such as <1.0 may be considered with a specialist; ESC/EAS 2019)":"");r.why.push("Very-high-risk criteria met: "+vh.join("; ")+". CPG Dyslipidaemia/T2DM: LDL-C <1.4 mmol/L and ≥50% fall from baseline.")}
+ else if(p.dm&&(p.dur>=10||p.age>=40||(p.egfr>=30&&p.egfr<60))||(!p.dm&&(p.egfr<60||p.ldl>=4.9||p.tc>=8||p.sbp>=180||p.dbp>=110))){tier="High";r.col="#b45309";r.ldlT=1.8;r.ldlTxt="<1.8 mmol/L and ≥50% reduction";r.why.push("High risk: "+(p.dm?"T2DM age ≥40 or duration ≥10 y without other major risk factors":"marked single risk factor or CKD 3")+" (CPG Dyslipidaemia 2023).")}
+ else if(p.dm){tier="Moderate";r.col="#0f766e";r.ldlT=2.6;r.ldlTxt="<2.6 mmol/L";r.why.push("Moderate risk: young T2DM (<40 y), short duration, no risk factors or organ damage.")}
+ else{tier="Low–Moderate (calculate FRS)";r.col="#475569";r.ldlT=3.0;r.ldlTxt="<3.0 (low) or <2.6 (moderate)";r.why.push("No diabetes or major criteria: estimate 10-year risk (Framingham/FRS) to place the patient in Low, Moderate or High.")}
+ r.tier=tier;
+ /* BP */
+ var bpS,bpD,bpTxt;
+ if(p.dm){
+  if(p.frail||p.age>=80){bpS=150;bpD=90;bpTxt="<150/90 mmHg, individualised (avoid orthostatic hypotension)"}
+  else if((albu||p.egfr<60)&&!p.ascvd){bpS=130;bpD=80;bpTxt="<130/80 if tolerated (not <120 systolic, not <70 diastolic)"}
+  else{bpS=140;bpD=80;bpTxt="130–139 / 70–79 mmHg (diastolic not <70)"}
+  r.why.push("BP target (CPG T2DM 6th Ed, Table 3-5): 130–139/70–79 mmHg; SBP <130 if tolerated in patients without coronary disease who are at higher stroke/DKD risk, never <120; DBP not <70.")}
+ else{ if(p.frail||p.age>=80){bpS=150;bpD=90;bpTxt="<150/90 mmHg, individualised"}else if(p.egfr<60||p.ascvd||albu){bpS=130;bpD=80;bpTxt="<130/80 if tolerated (verify in your HTN CPG edition)"}else{bpS=140;bpD=90;bpTxt="<140/90 mmHg (CPG HTN 2018)"}r.why.push("Non-diabetic BP target from CPG HTN 5th Ed (2018): <140/90, lower if tolerated with CKD/ASCVD. Verify against the edition you use.")}
+ r.bpTxt=bpTxt;r.bpOff=p.sbp>=bpS||p.dbp>=bpD;r.bpGap=r.bpOff?"Above target (+"+Math.max(0,p.sbp-bpS+1)+" / +"+Math.max(0,p.dbp-bpD+1)+")":"At target";
+ if(p.dm&&bpS===140){r.bpOff=p.sbp>139||p.dbp>79;r.bpGap=r.bpOff?"Above target":"At target"}
+ /* LDL */
+ r.ldlOff=p.ldl>r.ldlT;r.ldlGap=r.ldlOff?"Above goal (+"+(p.ldl-r.ldlT).toFixed(1)+")":"At goal";
+ /* HbA1c */
+ if(p.dm){
+  var less=p.frail||p.hf||p.egfr<45||p.hypo||(p.ascvd&&p.age>=65)||p.age>=75;
+  var tight=!less&&p.dur<5&&!p.ascvd&&!albu&&p.egfr>=60&&!p.m.su&&!p.m.ins&&p.age<65;
+  if(less){r.aT=8.0;r.aTxt="7.1–8.0% (less tight)"}else if(tight){r.aT=6.5;r.aTxt="≤6.5% (tight)"}else{r.aT=7.0;r.aTxt="6.6–7.0% (standard)"}
+  r.aOff=p.a1c>r.aT;r.aGap=r.aOff?"Above target (+"+(p.a1c-r.aT).toFixed(1)+"%)":"At target";
+  r.why.push("HbA1c target set from CPG T2DM Table 3-6: tight ≤6.5% (newly/recently diagnosed, younger, no CVD or albuminuria, low hypoglycaemia risk), 6.6–7.0% for others, 7.1–8.0% for elderly, advanced CVD/HF, eGFR <45, or hypoglycaemia risk.");
+ }else{r.aTxt="n/a (no diabetes)";r.aGap="";r.aOff=false}
+ r.other="TG ≤1.7 · HDL >"+(p.sex==="m"?"1.0":"1.2")+" · fasting 4.4–7.0 · post-meal 4.4–8.5 mmol/L";
+ /* alerts */
+ if(p.k>=5.5)AL("d","Hyperkalaemia (K⁺ "+p.k+")","Do a 12-lead ECG now. Hold ACEi/ARB/MRA and potassium supplements, repeat K⁺ (non-haemolysed). Send to ED if K⁺ ≥6.0 or ECG changes (peaked T, wide QRS).");
+ else if(p.k>0&&p.k<3.5)AL("w","Hypokalaemia (K⁺ "+p.k+")","Check diuretic use and Mg; ECG for U waves/QT. Replace and review the cause.");
+ if(p.dm&&p.egfr>0&&p.egfr<30)AL("d","Metformin: stop (eGFR "+p.egfr+")","Contraindicated below eGFR 30 (lactic acidosis). Linagliptin 5 mg needs no renal adjustment; basal insulin if more is needed.");
+ else if(p.dm&&p.egfr>0&&p.egfr<45)AL("w","Metformin: reduce (eGFR "+p.egfr+")","Cap at about 1,000 mg/day and recheck renal function every 3 months (CPG Appendix 7 / product labels).");
+ if(p.tg>=10)AL("d","TG ≥10 mmol/L: pancreatitis risk","Ask about abdominal pain. Stop alcohol and excess sugar, fix glycaemic control, start fenofibrate. Admit if pain or vomiting.");
+ else if(p.tg>=5.6)AL("w","TG "+p.tg+" mmol/L: very high","Treat secondary causes (poor glycaemia, alcohol, hypothyroid, drugs) and consider fenofibrate before LDL escalation (verify threshold in CPG Dyslipidaemia 2023).");
+ if(p.dm&&p.dbp>0&&p.dbp<70)AL("w","Diastolic <70 mmHg","CPG T2DM: avoid DBP <70, especially with coronary disease (J-curve, poor coronary perfusion). Ease off antihypertensives if symptomatic.");
+ if(p.fert&&(p.m.raas||r.ldlOff||p.dm))AL("w","Woman who could become pregnant","ACEi/ARB and statins are not for use in pregnancy. Counsel on contraception and plan a switch before conception.");
+ if(p.frail)AL("i","Frail / limited life expectancy","Goals are individual. Prioritise avoiding hypoglycaemia, falls and low BP; consider deprescribing (sulphonylurea, extra antihypertensives) and discuss statin intensity with the patient and family.");
+ if(p.m.nsaid)AL("w","NSAID in use","Raises BP, causes AKI and hyperkalaemia with ACEi/ARB + diuretic (“triple whammy”) and may mask infection. Stop and use paracetamol.");
+ if(p.m.su&&(p.egfr<45||p.age>=65||p.frail))AL("w","Sulphonylurea hypoglycaemia risk","Higher in renal impairment, elderly and frail. Prefer gliclazide/glimepiride; avoid glibenclamide (contraindicated in renal impairment; WHO advises against it above 60 y).");
+ /* actions */
+ var cr=p.dm&&(p.ascvd||p.hf||p.egfr<60||albu);
+ if(p.dm){
+  if(cr){var why=[];if(p.ascvd)why.push("ASCVD");if(p.hf)why.push("heart failure");if(p.egfr<60||albu)why.push("DKD/albuminuria");
+   A("org","e","SGLT2 inhibitor for organ protection (indicated for "+why.join(", ")+")","Empagliflozin 10–25 mg or dapagliflozin 10 mg once daily, regardless of HbA1c. "+(p.egfr<30?"CPG 2020: do not initiate below eGFR 30 (may continue if already started). Discuss with a nephrologist.":"Expect an eGFR dip of about 5 mL/min in the first 1–3 months (not a reason to stop). Counsel on genital infection, volume depletion and euglycaemic DKA; stop on sick days."),"CPG T2DM 6th Ed §3.6.1, §5.2; CVOTs Appendix 8");}
+  if(p.ascvd&&!p.m.sglt)A("org","r","Consider GLP-1 RA with proven CV benefit","Dulaglutide 0.75–1.5 mg weekly, liraglutide 1.2–1.8 mg daily or semaglutide 0.5–1.0 mg weekly. Do not combine with DPP-4i. Avoid with pancreatitis or personal/family MTC/MEN2.","CPG T2DM §3.6.2, Appendix 8");
+  if(p.hf)A("org","e","Heart failure: four-pillar therapy","SGLT2i + ACEi/ARB/ARNI + beta-blocker + MRA (monitor K⁺ and creatinine). Avoid pioglitazone and saxagliptin. Refer to cardiology/HF clinic.","CPG HF 2023; CPG T2DM");
+  if(p.egfr>=30&&r.aOff){A("dm","e","Glucose: optimise metformin, then add on","Metformin up to "+(p.egfr<45?"1,000":"2,000")+" mg/day with meals (XR improves tolerance). If above target after 3 months add SGLT2i (preferred with organ-protection indication), DPP-4i, or GLP-1 RA; gliclazide/glimepiride or pioglitazone (not in HF) if cost limits. Intensify every 3–6 months.","CPG T2DM §3.6.3–3.6.4");}
+  if(r.aOff&&(p.a1c>=r.aT+2||p.a1c>=10))A("dm","e","HbA1c ≥2% above target: consider early insulin or GLP-1 RA","Start basal insulin (e.g. 10 units or 0.1–0.2 U/kg at night) and titrate to fasting 4.4–7.0 mmol/L. Check for symptoms, ketones and secondary causes. Refer to the diabetes clinic if still uncontrolled.","CPG T2DM §3.6.4–3.6.5");
+  if(p.egfr<30)A("dm","e","Renal-safe glucose lowering","Linagliptin 5 mg daily (no adjustment) or basal insulin; avoid glibenclamide and metformin. Refer to nephrology.","CPG T2DM Appendix 7");
+ }
+ if(r.bpOff||p.sbp>=140){
+  var raas=p.dm&&(albu||p.egfr<60||p.ascvd)||p.hf||albu;
+  if(p.k>=5.5)A("htn","e","Do not give ACEi/ARB/MRA now (K⁺ "+p.k+")","Treat the hyperkalaemia first. Control BP meanwhile with amlodipine 5–10 mg (or indapamide SR 1.5 mg). Re-introduce ACEi/ARB at a low dose once K⁺ <5.0, with a K⁺ check at 1 week and dietary potassium advice.","CPG HTN 2018");else
+  A("htn","e",raas?"ACEi or ARB as the base of treatment":"Start with ACEi/ARB or a calcium channel blocker","Perindopril 4–8 mg, ramipril 5–10 mg, telmisartan 40–80 mg or losartan 50–100 mg once daily"+(raas?" (renal and cardiac protection; reduces albuminuria)":"")+". Check creatinine and K⁺ at 1–2 weeks; stop if creatinine rises >30% or K⁺ ≥5.5. Never combine ACEi with ARB.","CPG HTN 5th Ed (2018); CPG T2DM §3.9.1");
+  if(p.sbp-bpS>=20||p.dbp-bpD>=10||p.sbp>=160)A("htn","e","Use a single-pill combination now","A + C (ACEi/ARB + amlodipine 5 mg) or A + D (ACEi/ARB + indapamide SR 1.5 mg). A single pill improves adherence. Triple therapy A+C+D if still above target; spironolactone for resistant hypertension, and refer if still uncontrolled on 3 drugs.","CPG HTN 2018 (combination therapy)");
+  else A("htn","r","Add a second agent if still above target at 4 weeks","Add amlodipine 5–10 mg (A+C) or indapamide SR 1.5 mg (A+D). Use home BP or ABPM to confirm control. Beta-blockers only for CAD, HF or AF.","CPG HTN 2018");
+ }
+ if(p.sbp>=180||p.dbp>=110)AL("d","BP ≥180/110 mmHg","Look for symptoms/organ damage (chest pain, neuro deficit, dyspnoea, visual change, AKI). If present send to ED. If asymptomatic confirm adherence, restart or intensify treatment and review within a week. Do not drop BP abruptly.");
+ if(tier.indexOf("Low")<0){
+  var hi=tier.indexOf("Very")===0||tier==="High";
+  A("dlp",hi?"e":"r",hi?"High-intensity statin":"Moderate-intensity statin if LDL-C above goal or risk accrues",hi?"Atorvastatin 40–80 mg nocte or rosuvastatin 10–20 mg (Asian patients: start 5–10 mg, avoid 40 mg; max 10 mg if eGFR <30). Recheck lipids and ALT at 6–12 weeks.":"Atorvastatin 10–20 mg or rosuvastatin 5–10 mg. Recheck lipids and ALT at 6–12 weeks; reassess the tier yearly (HTN or dyslipidaemia moves a diabetic to very high).","CPG Dyslipidaemia 2023");
+  if(r.ldlOff&&(p.m.statin||p.ldl-r.ldlT>1.2))A("dlp","e","Add ezetimibe 10 mg","If LDL-C is above goal on maximally tolerated statin (or the gap is large, start both). If still above goal on statin + ezetimibe in very-high risk, refer for PCSK9 inhibitor.","CPG Dyslipidaemia 2023");
+  if(!r.ldlOff)A("dlp","r","LDL-C at goal","Continue the statin. Recheck lipids yearly and monitor adherence.","");
+ }else if(r.ldlOff)A("dlp","r","Lifestyle first, then statin per FRS","Estimate 10-year risk; start a statin if the risk and LDL-C justify it.","CPG Dyslipidaemia 2023");
+ if(p.tg>=5.6)A("dlp","e","Fenofibrate 145 mg daily for very high TG","Avoid gemfibrozil with a statin (myopathy) and with repaglinide (contraindicated).","CPG Dyslipidaemia 2023 (verify)");
+ A("life","r","Lifestyle (every visit)","Weight loss 5–10% in 6 months, 150 min/week activity, salt <5 g/day (<2,000 mg sodium), Malaysian Healthy Plate, stop smoking (cessation clinic), limit alcohol.","CPG T2DM §3.5");
+ /* referral */
+ [[p.egfr>0&&p.egfr<30,"eGFR <30 or rapid fall (>25% or >5 mL/min/yr): nephrology"],[p.uacr==="a3","UACR >30 mg/mmol, haematuria or active sediment: nephrology"],[p.k>=6.0,"K⁺ ≥6.0 or ECG changes: emergency department"],[p.sbp>=180||p.dbp>=110,"BP ≥180/110 with symptoms: emergency department"],[p.dm&&p.a1c>=r.aT+2,"HbA1c still ≥2% above target on ≥2 agents + basal insulin: diabetes clinic"],[p.tg>=10,"TG ≥10 mmol/L or abdominal pain: admit/medical"],[p.ascvd&&r.ldlOff,"LDL-C above goal on maximal statin + ezetimibe: lipid clinic (PCSK9i)"],[p.hf,"Heart failure or new dyspnoea/oedema: cardiology"],[p.tod,"Retinopathy: ophthalmology; foot ulcer/neuropathy: podiatry/diabetic foot clinic"]].forEach(function(x){if(x[0])r.ref.push(x[1])});
+ r.mon=["HbA1c every 3 months until at target, then every 6 months","BP (home or clinic) each visit; K⁺ and creatinine 1–2 weeks after RAAS or dose change","UACR and eGFR yearly (every 3–6 months if abnormal)","Lipids 6–12 weeks after a change, then yearly; ALT baseline","Dilated eye exam yearly, foot exam yearly (each visit if high risk), ECG at baseline and when symptomatic","Revisit sick-day rules at every visit"];
+ return r}
+
+function render(r){var p=r.p;R=r;
+ var chip=function(off,t){return '<span class="chip '+(off?"c-bad":"c-ok")+'">'+t+'</span>'};
+ var h='<div class="tier" style="background:'+r.col+'"><small style="opacity:.85">CV RISK TIER</small><h2>'+r.tier+'</h2><p>'+r.why[0]+'</p></div>';
+ h+='<div class="grid g3" style="margin-top:10px"><div class="tile"><small>BP goal</small><div class="v">'+r.bpTxt+'</div>'+chip(r.bpOff,p.sbp+"/"+p.dbp+": "+r.bpGap)+'</div><div class="tile"><small>LDL-C goal</small><div class="v">'+r.ldlTxt+'</div>'+chip(r.ldlOff,p.ldl+": "+r.ldlGap)+'</div><div class="tile"><small>HbA1c goal</small><div class="v">'+r.aTxt+'</div>'+(p.dm?chip(r.aOff,p.a1c+"%: "+r.aGap):"")+'</div></div><p class="muted">Other: '+r.other+'</p>';
+ r.al.forEach(function(a){h+='<div class="al '+a.ty+'"><b>'+a.t+'</b>'+a.d+'</div>'});
+ var cats=[["urg","Urgent"],["org","Organ protection"],["dm","Glucose"],["htn","Blood pressure"],["dlp","Lipids"],["life","Lifestyle"]];
+ h+='<div class="card" style="margin-top:12px"><h2>Therapy escalation matrix</h2>';
+ cats.forEach(function(c){var xs=r.ac.filter(function(a){return a.cat===c[0]});if(!xs.length)return;h+='<h3>'+c[1]+'</h3>';xs.forEach(function(a){h+='<div class="act '+(a.lvl==="e"?"e":"")+'"><div class="t">'+a.t+'</div><div style="font-size:12.5px">'+a.d+'</div>'+(a.ref?'<div class="r">'+a.ref+'</div>':"")+'</div>'})});h+='</div>';
+ if(r.ref.length)h+='<div class="card"><h2>When to refer or send to ED</h2><ul style="margin:0;padding-left:18px;font-size:13px">'+r.ref.map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul></div>';
+ h+='<div class="card"><h2>Follow-up plan</h2><ul style="margin:0;padding-left:18px;font-size:13px">'+r.mon.map(function(x){return"<li>"+x+"</li>"}).join("")+'</ul></div>';
+ h+='<div class="card"><h2>Clinical reasoning</h2>'+r.why.map(function(w,i){return'<details'+(i?"":" open")+'><summary>'+["Why this risk tier","Why this BP target","Why this HbA1c target"][i]+'</summary><p>'+w+'</p></details>'}).join("")+
+ '<details><summary>Why organ-protecting drugs regardless of HbA1c</summary><p>SGLT2 inhibitors and GLP-1 RAs cut cardiovascular events, and SGLT2i also slow kidney decline and heart-failure admissions. This benefit is independent of glucose lowering (CPG T2DM 6th Ed §3.6). ACEi/ARB lower intraglomerular pressure and albuminuria.</p></details><details><summary>Why lower LDL-C matters</summary><p>Each 1 mmol/L fall in LDL-C lowers CVD mortality by about 22%. Most Malaysian high-risk patients do not reach goal, mainly because of under-dosing and no add-on (Malaysian community study, Healthcare 2022).</p></details></div>';
+ $("res").innerHTML=h;sick(p)}
+
+/* ---------- sick day ---------- */
+function sick(p){var sc=$("sd-sc").value,m=p.m,L=[];
+ var row=function(on,name,hold,why){if(on)L.push('<div class="al '+(hold?"w":"i")+'"><b>'+(hold?"HOLD: ":"CONTINUE: ")+name+'</b>'+why+'</div>')};
+ var poor=sc==="2",surg=sc==="3";
+ row(m.sglt,"SGLT2 inhibitor",poor||surg||sc==="1","Euglycaemic DKA and volume depletion. Check ketones even if glucose is normal. "+(surg?"Stop 3 days before surgery (4 for ertugliflozin).":"Restart when eating and drinking normally for 24–48 h."));
+ row(m.met,"Metformin",poor||surg,poor?"Lactic acidosis risk with dehydration or falling eGFR. Restart when eating well and renal function is stable.":surg?"Hold on the day of surgery or contrast if eGFR <60 (restart after 48 h with a renal check).":"Can usually continue if eating and drinking.");
+ row(m.raas,"ACEi / ARB",poor,"Risk of AKI and hyperkalaemia when dehydrated. Restart when rehydrated; check creatinine and K⁺ after severe illness.");
+ row(m.diur,"Diuretic",poor,"Worsens dehydration and electrolyte loss.");
+ row(m.mra,"Spironolactone / MRA",poor,"Hyperkalaemia and AKI risk.");
+ row(m.su,"Sulphonylurea",poor||surg,"Hypoglycaemia when intake is poor or fasting. Resume with normal meals.");
+ row(m.nsaid,"NSAID",true,"Stop: AKI, with ACEi/ARB + diuretic it is the “triple whammy”. In fever in Malaysia think dengue (avoid NSAIDs; paracetamol only).");
+ if(m.ins)L.push('<div class="al i"><b>DO NOT STOP INSULIN</b>Continue basal insulin even if not eating. Check glucose every 4 hours; seek advice before changing doses.</div>');
+ if(m.statin)L.push('<div class="al i"><b>CONTINUE statin</b>Pause only if rhabdomyolysis or severe hepatitis is suspected.</div>');
+ if(!L.length)L.push('<p class="muted">Tick the medications the patient takes to see which to hold.</p>');
+ L.push('<div class="al d"><b>Seek urgent care if</b>vomiting &gt;24 h or unable to keep fluids; drowsy or confused; fast breathing or abdominal pain (DKA, even with normal glucose on an SGLT2i); glucose persistently &gt;15 mmol/L or moderate/high ketones; fever &gt;48–72 h; very little urine; chest pain.</div>');
+ $("sd-out").innerHTML='<p class="muted">SADMANS = Sulphonylureas, ACEi, Diuretics, Metformin, ARB, NSAIDs, SGLT2i. Drink 200 ml fluid hourly and check glucose every 4 h.</p>'+L.join("")}
+$("sd-sc").onchange=function(){sick(P())};
+function run(){render(calc(P()))}
+
+/* ---------- cases ---------- */
+var CASES=[
+["Newly diagnosed young T2DM","34 M, BMI 29, asymptomatic, HbA1c 8.1%, BP 122/76, LDL 2.4, no HTN","Moderate tier (no HTN or dyslipidaemia yet), tight HbA1c, metformin + lifestyle, early combination if far from target",{age:34,sbp:122,dbp:76,dur:0,hba1c:8.1,tc:4.4,ldl:2.4,hdl:1.1,tg:1.4,egfr:105,k:4.2,uacr:"a1",htn:0,ascvd:0}],
+["T2DM + HTN + albuminuria (DKD)","58 M, 8 y DM, BP 152/88, HbA1c 8.4%, eGFR 52, UACR 18","ACEi/ARB + SGLT2i for kidney, SPC if BP far above target, very-high tier",{}],
+["T2DM post-MI","62 M, STEMI 6 months ago, HbA1c 7.6%, LDL 2.4, BP 134/78","Secondary prevention: SGLT2i/GLP-1 RA, high-intensity statin + ezetimibe, LDL <1.4",{age:62,sbp:134,dbp:78,dur:10,hba1c:7.6,ldl:2.4,tc:4.3,hdl:0.9,tg:1.8,egfr:70,uacr:"a1",ascvd:1}],
+["T2DM with CKD 3b on metformin","71 M, eGFR 38, HbA1c 7.9%, BP 138/74, on metformin 2 g","Cap metformin at 1 g, SGLT2i, less tight HbA1c, avoid NSAIDs",{age:71,sbp:138,dbp:74,dur:15,hba1c:7.9,egfr:38,uacr:"a2",ldl:2.2,tc:4.2,m_met:1}],
+["Hyperkalaemia on ARB + spironolactone","67 F, diabetic CKD, eGFR 27, K⁺ 6.1, fatigue","ECG now, hold RAAS/MRA, ED if K⁺ ≥6.0 or ECG changes, metformin stop",{age:67,sex:"f",sbp:146,dbp:80,dur:14,hba1c:7.4,egfr:27,k:6.1,uacr:"a3",ldl:2.9,m_raas:1,m_mra:1,m_met:1}],
+["Frail elderly with T2DM","82 F, dementia, 3 falls, HbA1c 7.2%, BP 148/72, on gliclazide","Relax targets, deprescribe sulphonylurea, avoid hypoglycaemia and low BP",{age:82,sex:"f",sbp:148,dbp:72,dur:20,hba1c:7.2,egfr:48,uacr:"a2",ldl:2.4,frail:1,hypo:1,m_su:1}],
+["Very high triglycerides","45 M, TG 12.4, HbA1c 11%, epigastric discomfort","Pancreatitis risk: stop alcohol, fix glucose, fenofibrate, consider insulin",{age:45,sbp:136,dbp:84,dur:3,hba1c:11,tc:9.1,ldl:2.8,hdl:0.8,tg:12.4,egfr:95,uacr:"a1"}],
+["Gastroenteritis (sick day)","55 M, 2 days vomiting/diarrhoea, on metformin, empagliflozin, perindopril, indapamide","Hold the whole SADMANS set, rehydrate, check ketones, restart in 24–48 h",{age:55,sbp:102,dbp:64,hba1c:7.2,egfr:58,m_met:1,m_sglt:1,m_raas:1,m_diur:1,sd:2}],
+["T2DM with heart failure","66 M, HFrEF EF 30%, dyspnoea, eGFR 60, BP 118/70","SGLT2i + 4-pillar HF therapy, no pioglitazone/saxagliptin, cardiology",{age:66,sbp:118,dbp:70,dur:11,hba1c:7.8,egfr:60,uacr:"a1",hf:1,ldl:2.6}]];
+$("cases").innerHTML=CASES.map(function(c,i){return'<div class="act"><div class="t">'+c[0]+'</div><div style="font-size:12.5px">'+c[1]+'</div><div class="r" style="font-size:12px;color:var(--fg)">→ '+c[2]+'</div><button class="btn s" data-c="'+i+'" style="margin-top:6px">Load into engine</button></div>'}).join("");
+$("cases").onclick=function(e){var b=e.target.closest("[data-c]");if(!b)return;var d=CASES[b.dataset.c][3],defs={age:58,sex:"m",sbp:152,dbp:88,hr:78,dur:8,hba1c:8.4,tc:5.6,ldl:3.4,hdl:1.0,tg:2.1,egfr:52,k:4.6,uacr:"a2",dm:1,htn:1,smk:0,frail:0,ascvd:0,rec:0,hf:0,tod:0,hypo:0,fert:0};
+ for(var k in defs){var v=d[k]!==undefined?d[k]:defs[k],el=$(k);if(!el)continue;if(el.type==="checkbox")el.checked=!!v;else el.value=v}
+ MED.forEach(function(x){$("m-"+x[0]).checked=!!d["m_"+x[0]]});if(d.sd)$("sd-sc").value=d.sd;run();show("engine")};
+
+/* ---------- flowchart ---------- */
+var F=[
+["n","1 · Confirm and classify","Symptomatic: one abnormal test. Asymptomatic: two abnormal results. FPG ≥7.0 · RPG ≥11.1 · 2-h OGTT ≥11.1 · HbA1c ≥6.3% (Malaysian cut-off). Prediabetes: HbA1c 5.7–6.2%, FPG 6.1–6.9.","Malaysian data found HbA1c 6.3% as the best balance of sensitivity and specificity (6.5% missed too many). HbA1c is unreliable with anaemia, haemoglobinopathy, CKD 4–5 and iron/B12 deficiency."],
+["n","2 · Baseline work-up","BP (sitting and standing), BMI/waist, FPG + HbA1c, lipids, renal profile + eGFR, UACR, LFT, urine FEME, ECG, dilated eye exam, foot check, smoking status.","Table 3-3 of the T2DM CPG. You cannot place the patient in a risk tier or pick a drug safely without eGFR, UACR and K⁺."],
+["d","3 · Does the patient have ASCVD, heart failure or CKD/albuminuria?","","These three states change the first drug choice. The benefit of SGLT2i/GLP-1 RA/ACEi comes from organ protection, not from glucose."],
+["b",[["YES → Organ-protection pathway","SGLT2i (eGFR ≥30 to start) ± GLP-1 RA (ASCVD); ACEi/ARB (albuminuria or HTN); high-intensity statin ± ezetimibe; LDL <1.4. Start regardless of HbA1c."],["NO → Standard pathway","Metformin + lifestyle; early combination if HbA1c well above target; BP target 130–139/70–79; statin by tier."]],""],
+["n","4 · Set the three targets","BP: 130–139/70–79 (SBP <130 if DKD/stroke risk and no CHD; never <120 or DBP <70). HbA1c: ≤6.5 / 6.6–7.0 / 7.1–8.0 by profile. LDL-C: <2.6 moderate · <1.8 high · <1.4 very high.","Targets are individualised: the tightest goal only where hypoglycaemia risk is low and life expectancy long."],
+["b",[["Glucose ladder","Metformin → add SGLT2i / GLP-1 RA / DPP-4i / SU / pioglitazone → GLP-1 RA or basal insulin → intensify. Review every 3–6 months. No GLP-1 RA + DPP-4i together."],["BP ladder","ACEi/ARB (or CCB) → A+C or A+D single pill → A+C+D → spironolactone → refer. Check creatinine/K⁺ at 1–2 weeks."],["Lipid ladder","High-intensity statin → + ezetimibe → PCSK9i via specialist. Recheck at 6–12 weeks. TG ≥5.6: treat TG first."],["Always","Lifestyle: 5–10% weight loss, 150 min/week, salt <5 g, stop smoking."]],"Treat all three together: each risk factor multiplies the others. The ABC of T2DM (A1c, BP, Cholesterol) reduces long-term complications and death beyond the trial period."],
+["d","5 · Safety check before each prescription","","Renal function, potassium, pregnancy potential and sick-day risk change the dose or the drug."],
+["b",[["eGFR cut-offs","Metformin: stop <30, cap 1 g at 30–44. SGLT2i: do not start <30. Linagliptin no adjustment. Avoid glibenclamide and NSAIDs."],["K⁺ / creatinine","K⁺ ≥5.5: ECG, hold RAAS. Creatinine rise >30% after ACEi/ARB: stop and look for renal artery stenosis or dehydration."]],""],
+["e","6 · Review and refer","Review: HbA1c 3-monthly. Refer: eGFR <30 or fast fall, UACR >30, K⁺ ≥6, BP ≥180/110 with symptoms, TG ≥10, uncontrolled after 3 drugs, retinopathy, foot ulcer.","Therapeutic inertia (not intensifying when above target) is the commonest reason patients stay uncontrolled."]];
+$("flow").innerHTML=F.map(function(f,i){var a=i?'<div class="arr">↓</div>':"",t=f[0];
+ if(t==="b")return a+'<div class="br">'+f[1].map(function(x){return'<div class="node"><h4>'+x[0]+'</h4><p>'+x[1]+'</p></div>'}).join("")+'</div>'+(f[2]?'<div class="node" style="margin-top:8px;border-style:dotted"><details><summary>Clinical reasoning</summary><p>'+f[2]+'</p></details></div>':"");
+ return a+'<div class="node '+(t==="d"?"dec":t==="e"?"end":"")+'"><h4>'+f[1]+'</h4>'+(f[2]?'<p>'+f[2]+'</p>':"")+'<details><summary>Clinical reasoning</summary><p>'+f[3]+'</p></details></div>'}).join("");
+
+/* ---------- labs ---------- */
+var LABS=[
+["HbA1c","<5.7% normal · prediabetes 5.7–6.2% · T2DM ≥6.3% · target ≤6.5 / 6.6–7.0 / 7.1–8.0","Above target at 3 months: intensify. >9–10% or symptomatic: consider insulin","≥11% with weight loss/thirst: exclude DKA/HHS. Unreliable in anaemia, haemoglobinopathy, CKD 4–5"],
+["Fasting plasma glucose","4.4–7.0 target · IFG 6.1–6.9 · DM ≥7.0 mmol/L","FPG above 7.0 on treatment: titrate basal/metformin","<4.0 = hypoglycaemia: treat and review drugs. >15 with ketones or vomiting: urgent care"],
+["Post-meal glucose","4.4–8.5 mmol/L (≥90 min after meal)","Persistently high with normal FPG: add post-prandial agent","≥11.1 random with symptoms = diagnostic"],
+["BP (clinic)","T2DM 130–139/70–79 · non-DM <140/90 (HTN CPG 2018)","Repeat readings; confirm with home BP/ABPM","≥180/110 with symptoms: ED. Asymptomatic: review adherence, treat, review ≤1 week"],
+["Pulse / rhythm","60–100 regular","Irregular: ECG for AF","<50 or >120, syncope: ECG, same-day review"],
+["LDL-C","Goal <2.6 / <1.8 / <1.4 mmol/L by risk","Above goal on statin at 6–12 weeks: check adherence, add ezetimibe","≥4.9 or family history of early CAD: suspect familial hypercholesterolaemia, refer"],
+["Total cholesterol","<5.2 desirable","≥5.2 with risk factors: risk-tier the patient","≥8.0: high-risk marker; look for secondary causes (hypothyroid, nephrotic, cholestasis)"],
+["HDL-C","Men >1.0 · women >1.2 mmol/L","Low: lifestyle, treat TG","—"],
+["Triglycerides","≤1.7 mmol/L","≥2.3 persistent: treat causes","≥5.6 very high (fenofibrate, treat cause) · ≥10 pancreatitis risk (admit if abdominal pain)"],
+["Creatinine / eGFR","eGFR ≥90 normal · 60–89 mild · 45–59 · 30–44 · 15–29 · <15","Fall >25% or >5 mL/min/yr: repeat, check drugs/volume. Creatinine rise >30% after ACEi/ARB: stop","eGFR <30, rapid decline, or AKI: nephrology/ED"],
+["UACR (spot urine)","<3 mg/mmol (A1) · 3–30 (A2) · >30 (A3)","A2–A3 twice in 3 months = DKD: ACEi/ARB + SGLT2i","A3 with haematuria or eGFR dropping: refer; repeat if fever/exercise/UTI recently"],
+["Potassium","3.5–5.0 mmol/L","5.1–5.4: review RAAS, diet, NSAID, trimethoprim","≥5.5: ECG, hold ACEi/ARB/MRA · ≥6.0 or ECG changes: ED · <3.0: ECG, replace"],
+["Sodium","135–145 mmol/L","<135 on thiazide/indapamide: stop and repeat","<125 or symptomatic: ED"],
+["ALT (statin/fibrate)","Normal for lab (about <40 U/L)","Baseline then at 6–12 weeks","ALT >3× upper limit: stop/reduce statin and evaluate. Jaundice: urgent"],
+["CK (muscle symptoms)","Normal for lab","Myalgia on statin: check CK, TSH, vitamin D","CK >10× upper limit or dark urine: stop statin, check renal function, urgent care"],
+["Vitamin B12","Normal for lab","Long-term metformin with neuropathy or anaemia: check","Low: replace and review other causes"],
+["Urine ketones / blood ketones","Negative; blood <0.6 mmol/L","On SGLT2i with illness: check even if glucose normal","Ketones ≥1.5 mmol/L (or moderate/large) with vomiting: euglycaemic DKA, send to ED"],
+["FBC","Hb men 13–17 · women 12–15 g/dL","Anaemia in CKD: investigate","Hb <8 or chest pain: urgent review. Fever in Malaysia: check platelets for dengue"],
+["12-lead ECG","Sinus, PR 120–200, QRS <120, QTc <450/460","At diagnosis, symptoms, K⁺ abnormality","New ST change, LBBB, AF, AV block, QTc >500: see ECG tab, same-day referral"],
+["Retina","Dilated exam or photograph yearly","Any retinopathy: ophthalmology plan","Sudden vision loss or new floaters: same-day ophthalmology"],
+["Feet","10-g monofilament, pulses, skin yearly","Loss of sensation or deformity: 3–6 monthly","Ulcer, infection, black toe, rest pain: same-day referral"],
+["BMI / waist","BMI 18.5–22.9 · overweight ≥23 · obese ≥27.5; waist <90 cm men, <80 cm women","BMI ≥23 with T2DM: aim 5–10% loss in 6 months","BMI ≥35 with complications: consider metabolic surgery referral"]];
+function labs(q){q=(q||"").toLowerCase();$("labs").innerHTML=LABS.filter(function(l){return l.join(" ").toLowerCase().indexOf(q)>-1}).map(function(l){return'<tr><td><b>'+l[0]+'</b></td><td>'+l[1]+'</td><td>'+l[2]+'</td><td>'+l[3]+'</td></tr>'}).join("")||'<tr><td colspan="4" class="muted">No match.</td></tr>'}
+$("lab-q").oninput=function(){labs(this.value)};labs();
+
+/* ---------- ECG ---------- */
+var EC=[
+["Normal sinus","sinus","P before every QRS, PR 120–200 ms, QRS <120 ms, upright T.",[],"Reference. Compare every ECG with this."],
+["LVH with strain (long-standing HTN)","lvh","Tall R in V5–V6 + deep S in V1 (sum ≥35 mm), ST depression and T inversion laterally.",["Strain pattern with chest pain: exclude ischaemia"],"Intensify BP control, echo, check for DKD/HF. Not an emergency alone."],
+["Acute STEMI (anterior)","stemi","ST elevation (“tombstone”) in ≥2 contiguous leads, reciprocal ST depression. Diabetics may have no pain.",["Chest pain, sweating, dyspnoea, new LBBB","Silent MI in diabetics"],"Call 999. Aspirin 300 mg chewed (if no contraindication), IV access, transfer for primary PCI (CPG ACS/STEMI)."],
+["Wellens’ syndrome","wellens","Deep or biphasic T inversion V2–V3 after chest pain, normal or minimal ST change.",["Critical proximal LAD stenosis: large MI within days"],"Do not stress test. Same-day cardiology/ED referral."],
+["Pathological Q waves (old MI)","qwave","Q ≥40 ms or >25% of R in ≥2 contiguous leads with loss of R height.",["Common in diabetics who never had chest pain"],"Treat as established ASCVD: very-high tier, LDL <1.4, aspirin/statin, cardiology review."],
+["Atrial fibrillation","afib","Irregularly irregular, no P waves, fibrillatory baseline.",["HR >120 with hypotension, chest pain, syncope: cardioversion pathway","Stroke risk: CHA₂DS₂-VASc"],"Rate control, assess stroke risk (diabetes and HTN each add a point), anticoagulate if indicated, check TFT and echo."],
+["Hyperkalaemia (peaked T)","peak","Tall, narrow, symmetrical tented T waves; later PR prolongation and wide QRS. Seen with ACEi/ARB/MRA in CKD.",["K⁺ ≥5.5 with ECG change is an emergency"],"Hold RAAS/MRA/NSAID, repeat K⁺, ED for IV calcium gluconate and insulin-dextrose if ECG changes or K⁺ ≥6.0."],
+["Severe hyperkalaemia (sine wave)","sine","Wide, sinusoidal QRS-T with no P waves. Cardiac arrest is imminent.",["Pre-arrest rhythm"],"Call 999. IV calcium gluconate 10% 10–20 mL, insulin-dextrose, salbutamol, urgent dialysis review."],
+["Hypokalaemia (U waves)","hypok","ST depression, flat T, prominent U wave, long QU. Diuretics or vomiting.",["Palpitations, torsades risk"],"Replace K⁺ and Mg, review diuretic, repeat ECG."],
+["Prolonged QTc","qt","QTc >450 ms (M) or >460 ms (F). Drugs: macrolides, quinolones, antipsychotics, ondansetron.",["QTc >500 ms or syncope: torsades risk"],"Stop offending drug, correct K/Mg/Ca, urgent review."],
+["Complete heart block","chb","P waves and QRS march independently, slow wide escape (<40/min).",["Syncope, hypotension, beta-blocker/CCB/digoxin toxicity"],"Atropine only if unstable, call 999, hold rate-slowing drugs, temporary pacing."]];
+function wave(type){var W=360,pts=[],g=function(x,c,w,a){return a*Math.exp(-Math.pow((x-c)/w,2))},seed=7,rnd=function(){seed=(seed*9301+49297)%233280;return seed/233280};
+ var per=95,off=[];var beats=[];var x0=20;if(type==="afib"){while(x0<W+60){beats.push(x0);x0+=55+rnd()*60}}else if(type==="chb"){while(x0<W+60){beats.push(x0);x0+=130}}else{while(x0<W+60){beats.push(x0);x0+=per}}
+ var P={sinus:{p:5,r:30,st:0,t:9,q:-3},lvh:{p:5,r:44,st:-7,t:-9,q:-3},stemi:{p:5,r:26,st:16,t:10,q:-3},wellens:{p:5,r:30,st:0,t:-15,q:-3},qwave:{p:5,r:12,st:0,t:5,q:-16},afib:{p:0,r:30,st:0,t:7,q:-3},peak:{p:3,r:28,st:0,t:30,q:-3,tw:5},sine:{p:0,r:20,st:0,t:20,q:0,wide:1},hypok:{p:5,r:28,st:-6,t:1,q:-3,u:7},qt:{p:5,r:30,st:0,t:9,q:-3,tc:60},chb:{p:5,r:25,st:0,t:7,q:-3,wide:1}}[type];
+ for(var x=0;x<=W;x+=1.5){var y=0;
+  beats.forEach(function(b){var wd=P.wide?3.6:1.8;y+=g(x,b,wd,P.r)+g(x,b-6,1.4,P.q)+g(x,b+7,2.2,-9)+g(x,b+(P.tc?P.tc:34),P.tw?P.tw:9,P.t)+(P.st?g(x,b+20,13,P.st):0)+(P.p?g(x,b-30,6,P.p):0)+(P.u?g(x,b+70,8,P.u):0)});
+  if(type==="chb"){for(var q=15;q<W+40;q+=62)y+=g(x,q,5,5)}
+  if(type==="afib")y+=Math.sin(x*1.9)*1.6+Math.sin(x*3.7)*1.1;
+  if(type==="sine")y=22*Math.sin(x/9);
+  pts.push(x.toFixed(1)+","+(46-y).toFixed(1))}
+ return'<svg viewBox="0 0 '+W+' 92" preserveAspectRatio="none"><polyline fill="none" stroke="var(--pri)" stroke-width="1.8" points="'+pts.join(" ")+'"/></svg>'}
+$("ecgs").innerHTML=EC.map(function(e){return'<div class="ecg">'+wave(e[1])+'<h4>'+e[0]+'</h4><ul><li>'+e[2]+'</li>'+e[3].map(function(x){return'<li style="color:var(--bad)"><b>Red flag:</b> '+x+'</li>'}).join("")+'</ul><div class="act-line"><b>GP action:</b> '+e[4]+'</div></div>'}).join("");
+
+/* ---------- references ---------- */
+$("refs").innerHTML=[
+'<details open><summary>Source guidelines</summary><ul><li>MOH/AMM/MEMS/FMSA/Diabetes Malaysia. <b>CPG Management of Type 2 Diabetes Mellitus, 6th Edition</b>, Dec 2020 (read in full for targets and drug sections).</li><li>MOH/AMM/NHAM. <b>CPG Management of Dyslipidaemia, 6th Edition</b>, 2023 (the 5th Edition, 2017, is the earlier version).</li><li>MOH/MSH/AMM. <b>CPG Management of Hypertension, 5th Edition</b>, 2018. <b>A 6th Edition (2026) could not be located on the MOH CPG list I checked</b>; BP rules outside the T2DM CPG are marked “verify”.</li><li>CPG Heart Failure (2023), CPG ACS 1st Edition (2026) and CPG STEMI 4th Edition for chest-pain pathways.</li><li>ESC/EAS 2019 Dyslipidaemia guideline (LDL-C &lt;1.0 mmol/L for recurrent events).</li></ul><p class="muted">CPG list: moh.gov.my → Panduan Amalan Klinikal (CPG). T2DM CPG: mems.my. HTN CPG 2018: mymahtas2.moh.gov.my.</p></details>',
+'<details><summary>Numbers taken directly from the T2DM CPG (6th Ed)</summary><ul><li>HbA1c: ≤6.5% tight, 6.6–7.0% standard, 7.1–8.0% less tight (Table 3-6). Diagnosis ≥6.3%; prediabetes 5.7–6.2%.</li><li>BP 130–139/70–79 mmHg; SBP &lt;130 if tolerated without CHD and at higher stroke/DKD risk; not &lt;120; DBP not &lt;70.</li><li>LDL-C: moderate &lt;2.6, high &lt;1.8, very high &lt;1.4 mmol/L. TG ≤1.7; HDL &gt;1.0 (M) / &gt;1.2 (F). Fasting 4.4–7.0; post-meal 4.4–8.5.</li><li>Metformin max 2,000 mg/day; lactic acidosis rare (&lt;1 per 100,000), mostly with renal impairment.</li><li>SGLT2i: do not initiate at eGFR &lt;30 (may continue); withhold in intercurrent illness; euglycaemic DKA reported.</li><li>GLP-1 RA: not with DPP-4i; avoid with pancreatitis history or MTC/MEN2. Saxagliptin and pioglitazone avoided in heart failure. Glibenclamide contraindicated in renal impairment. Repaglinide + gemfibrozil contraindicated.</li><li>Exercise 150 min/week; weight loss up to 10% in 6 months; sodium &lt;2,000 mg/day.</li></ul></details>',
+'<details><summary>Items used from general practice or other guidelines (check locally)</summary><ul><li>Metformin dose cap at eGFR 30–44 and renal dosing detail (CPG Appendix 7, product labels).</li><li>TG thresholds 5.6 and 10 mmol/L for fenofibrate/pancreatitis risk.</li><li>Rosuvastatin Asian dosing, 3-day SGLT2i pre-op stop, SADMANS list.</li><li>“Extreme risk”/LDL &lt;1.0: ESC/EAS 2019; not confirmed as a separate Malaysian tier.</li></ul></details>',
+'<details><summary>Key drug interactions</summary><ul><li><b>ACEi + ARB:</b> avoid (hyperkalaemia, AKI).</li><li><b>ACEi/ARB + diuretic + NSAID:</b> “triple whammy” AKI.</li><li><b>ACEi/ARB/MRA + trimethoprim or K⁺ supplements:</b> hyperkalaemia.</li><li><b>Statin + gemfibrozil:</b> myopathy; use fenofibrate. <b>Simvastatin + amlodipine:</b> cap simvastatin 20 mg. <b>Statin + clarithromycin:</b> hold statin.</li><li><b>Repaglinide + gemfibrozil:</b> contraindicated (CPG).</li><li><b>Sulphonylurea + NSAID/sulpha drugs/anticoagulants:</b> hypoglycaemia (CPG).</li><li><b>Non-DHP CCB (verapamil/diltiazem) + beta-blocker:</b> heart block.</li><li><b>Clopidogrel + omeprazole:</b> reduced effect; use pantoprazole.</li></ul></details>',
+'<details><summary>Limits of this tool</summary><p>It follows the CPGs for typical adults. It does not cover pregnancy, type 1 diabetes, acute emergencies beyond the red flags, or paediatric patients. AI output can be wrong. Verify doses against the MOH formulary (FUKKM) and the product label.</p></details>'].join("");
+
+/* ---------- AI ---------- */
+var KB="Verified Malaysian CPG facts: T2DM CPG 6th Ed 2020: HbA1c targets <=6.5 (tight), 6.6-7.0 (standard), 7.1-8.0 (less tight); BP 130-139/70-79 in T2DM (SBP<130 if tolerated, no CHD, higher stroke/DKD risk; not <120; DBP not <70); LDL-C <2.6 moderate, <1.8 high, <1.4 very high; metformin max 2000 mg, stop eGFR<30; SGLT2i not to be initiated eGFR<30, withhold in intercurrent illness; GLP-1 RA not with DPP-4i; avoid saxagliptin/pioglitazone in HF; glibenclamide contraindicated in renal impairment; repaglinide+gemfibrozil contraindicated. Dyslipidaemia CPG 2023: statins first line, very high risk LDL<1.4 and >=50% reduction. HTN CPG 5th Ed 2018 is the latest edition verified (a 2026 edition could not be confirmed): ACEi stop if creatinine rises >30%; combination therapy often needed. Say clearly when a point is NOT in these CPGs. Use Malaysian drugs/doses and units (mmol/L, UACR mg/mmol). Be concise, practical, and clinician-facing.";
+var HIST=[];
+function ctx(){var p=P(),r=R||calc(p);return"PATIENT: age "+p.age+" "+p.sex+"; BP "+p.sbp+"/"+p.dbp+"; HR "+p.hr+"; T2DM "+p.dm+" duration "+p.dur+"y; HbA1c "+p.a1c+"%; TC "+p.tc+" LDL "+p.ldl+" HDL "+p.hdl+" TG "+p.tg+"; eGFR "+p.egfr+"; UACR "+p.uacr+"; K "+p.k+"; smoker "+p.smk+"; frail "+p.frail+"; ASCVD "+p.ascvd+"; HF "+p.hf+"; retinopathy/neuropathy "+p.tod+"; meds: "+MED.filter(function(m){return p.m[m[0]]}).map(function(m){return m[1]}).join(", ")+"\nTOOL RESULT: tier "+r.tier+"; BP goal "+r.bpTxt+"; LDL goal "+r.ldlTxt+"; HbA1c goal "+r.aTxt+"; alerts: "+r.al.map(function(a){return a.t}).join("; ")}
+async function ask(prompt,btn){var o=$("ai-out");o.textContent="Thinking…";btn.disabled=true;
+ try{var s=window.claude?await window.claude.use("sample"):null;if(!s){o.textContent="Claude is not available in this view. Open this page while signed in to claude.ai.";return}
+  var out=await s("You are a senior family medicine specialist advising a Malaysian GP.\n"+KB+"\n\n"+ctx()+"\n\n"+prompt,{modelTier:"complex",cache:false,onText:function(t){o.textContent=t.text}});
+  o.textContent=out.text;window._ai=out.text}
+ catch(e){o.textContent=e&&e.code==="not_granted"?"Permission to use Claude was declined.":e&&e.code==="rate_limited"?"Too many requests. Wait a moment.":"Could not get an answer: "+((e&&e.message)||e)}
+ finally{btn.disabled=false}}
+$("ai-consult").onclick=function(){ask("Write: (1) risk-tier justification citing the CPG, (2) gap analysis for BP, LDL-C and HbA1c, (3) a prescription plan with exact drugs, doses and titration, (4) renal and sick-day safety for this patient, (5) a short referral/consult note the GP can paste into the EMR. State clearly which points are not in the CPGs.",this)};
+$("ai-ddi").onclick=function(){ask("Review this patient's listed medications for interactions, contraindications for the renal function, and guideline-recommended changes. Give: critical problems, moderate issues, good combinations, and safer substitutes.",this)};
+$("ai-ask").onclick=function(){var q=$("ai-q").value.trim();if(q)ask("GP question: "+q+"\nAnswer using the CPG facts above and say what is outside them.",this)};
+
+/* ---------- PDF ---------- */
+var cl=function(t){return String(t).replace(/≥/g,">=").replace(/≤/g,"<=").replace(/[–—]/g,"-").replace(/[‘’]/g,"'").replace(/[“”]/g,'"').replace(/→/g,"->").replace(/⁺/g,"+").replace(/₂/g,"2").replace(/×/g,"x").replace(/[•·]/g,"-").replace(/<\/?(b|i|br|small|p|ul|li)\b[^>]*>/g,"").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/\s+/g," ").trim()};
+$("pdf").onclick=async function(){
+ if(!window.jspdf){window.print();return}
+ var p=P(),r=calc(p),d=new window.jspdf.jsPDF({unit:"pt",format:"a4"}),y=54,L=46,W=503;
+ function line(t,o){o=o||{};d.setFont("helvetica",o.b?"bold":"normal");d.setFontSize(o.s||10);d.setTextColor.apply(d,o.c||[35,35,35]);d.splitTextToSize(cl(t),W-(o.i||0)).forEach(function(l){if(y>792){d.addPage();y=54}d.text(l,L+(o.i||0),y);y+=(o.s||10)+3.5});y+=o.g||2}
+ line("Malaysian NCD Triple-Target Summary",{b:1,s:16,g:3});
+ line("Generated "+new Date().toLocaleString("en-GB")+"   Patient: "+($("pid").value.trim()||"-"),{c:[100,100,100]});
+ line("Decision-support aid based on MOH Malaysia CPGs (T2DM 6th Ed 2020, Dyslipidaemia 2023, HTN 5th Ed 2018). Not a substitute for clinical judgement.",{s:8,c:[110,110,110],g:6});
+ line("Patient data",{b:1,s:12});
+ line("Age "+p.age+", "+(p.sex==="m"?"male":"female")+"; BP "+p.sbp+"/"+p.dbp+"; HR "+p.hr+"; DM duration "+p.dur+" y; HbA1c "+p.a1c+"%; TC "+p.tc+", LDL "+p.ldl+", HDL "+p.hdl+", TG "+p.tg+" mmol/L; eGFR "+p.egfr+"; UACR "+p.uacr.toUpperCase()+"; K "+p.k+" mmol/L.");
+ line("Flags: "+CK.filter(function(c){return p[c[0]]}).map(function(c){return c[1]}).join("; ")+". Medications: "+(MED.filter(function(m){return p.m[m[0]]}).map(function(m){return m[1]}).join(", ")||"none ticked")+".",{g:6});
+ line("Risk tier: "+r.tier,{b:1,s:12});line("BP goal: "+r.bpTxt+" ["+r.bpGap+"]");line("LDL-C goal: "+r.ldlTxt+" ["+r.ldlGap+"]");if(p.dm)line("HbA1c goal: "+r.aTxt+" ["+r.aGap+"]");line("Other: "+r.other,{g:6});
+ if(r.al.length){line("Safety alerts",{b:1,s:12});r.al.forEach(function(a){line("- "+a.t+": "+a.d,{i:6})})}
+ line("Suggested therapy",{b:1,s:12});r.ac.forEach(function(a){line("- "+a.t+". "+a.d,{i:6})});
+ if(r.ref.length){line("Refer / escalate",{b:1,s:12});r.ref.forEach(function(x){line("- "+x,{i:6})})}
+ line("Follow-up",{b:1,s:12});r.mon.forEach(function(x){line("- "+x,{i:6})});
+ var sd=[];document.querySelectorAll("#sd-out .al").forEach(function(a){sd.push(a.innerText)});if(sd.length){line("Sick-day plan",{b:1,s:12});sd.forEach(function(x){line("- "+x,{i:6})})}
+ if(window._ai){line("AI consult note (verify before use)",{b:1,s:12});line(window._ai,{s:9})}
+ var blob=d.output("blob"),nm="ncd-triple-target-"+new Date().toISOString().slice(0,10)+".pdf";
+ try{var dl=window.claude?await window.claude.use("downloads"):null;if(dl){await dl.save({filename:nm,data:blob});return}}catch(e){if(e&&e.code==="declined")return}
+ var a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=nm;a.click()};
+
+run();
+})();
+</script>
+</body>
+</html>
